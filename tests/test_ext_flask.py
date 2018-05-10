@@ -7,9 +7,9 @@ from apispec import APISpec
 from apispec.ext.flask import FlaskPlugin
 
 
-
+@pytest.fixture(params=(True, False))
 @pytest.fixture()
-def spec():
+def spec(request):
     return APISpec(
         title='Swagger Petstore',
         version='1.0.0',
@@ -18,7 +18,8 @@ def spec():
         'or on irc.freenode.net, #swagger.  For this sample, you can use the api '
         'key \"special-key\" to test the authorization filters',
         plugins=[
-            FlaskPlugin()
+            # Test both plugin class and deprecated interface
+            FlaskPlugin() if request.param else 'apispec.ext.flask',
         ]
     )
 

@@ -6,8 +6,9 @@ from apispec.ext.tornado import TornadoPlugin
 from tornado.web import RequestHandler
 import tornado.gen
 
+@pytest.fixture(params=(True, False))
 @pytest.fixture()
-def spec():
+def spec(request):
     return APISpec(
         title='Swagger Petstore',
         version='1.0.0',
@@ -17,7 +18,8 @@ def spec():
         'For this sample, you can use the api key \"special-key\" to test the'
         'authorization filters',
         plugins=[
-            TornadoPlugin()
+            # Test both plugin class and deprecated interface
+            TornadoPlugin() if request.param else 'apispec.ext.tornado',
         ]
     )
 
